@@ -3,33 +3,36 @@ import logo from './logo.svg';
 import './App.css';
 
 import TodoList from './components/TodoList';
+import TodoItems from './components/TodoItems';
 
 class App extends Component {
+  inputElement = React.createRef();
   constructor() {
     super();
     this.state = {
       items: [],
-      currentItem: { text: '', key: '' }
+      currentItem: {
+        text: '',
+        key: ''
+      }
     };
   }
 
   // to handle data on input field on change
-  handleInput = e => {
-    const itemText = e.target.value;
+  handleInput = input => {
+    const itemText = input.target.value;
     const currentItem = { text: itemText, key: Date.now() };
     this.setState({
       currentItem
     });
   };
 
-  // to display the value of the state set to currentItem
-  currentItem = () => {
-    console.log('Hello Current Item');
-  };
-
   // to handle click on add
-  addItem = e => {
-    e.preventDefault();
+  addItem = item => {
+    // stop page from refreshing onClick
+    item.preventDefault();
+
+    // checks to make sure there is a new task before adding one
     const newItem = this.state.currentItem;
     if (newItem.text !== '') {
       console.log(newItem);
@@ -41,7 +44,17 @@ class App extends Component {
     }
   };
 
-  // render
+  // delete a task
+  deleteItem = key => {
+    // stores the items that don't match the key
+    const filteredItems = this.state.items.filter(item => {
+      return item.key !== key;
+    });
+    this.setState({
+      items: filteredItems
+    });
+  };
+
   render() {
     return (
       <div className="App">
@@ -49,8 +62,9 @@ class App extends Component {
           addItem={this.addItem}
           inputElement={this.inputElement}
           handleInput={this.handleInput}
-          currentItem={this.currentItem}
+          currentItem={this.state.currentItem}
         />
+        <TodoItems entries={this.state.items} deleteItem={this.deleteItem} />
       </div>
     );
   }

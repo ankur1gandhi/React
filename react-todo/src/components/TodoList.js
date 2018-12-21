@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 class TodoList extends Component {
   // what happens on component update
   componentDidUpdate() {
+    // keeps the cursor in the task field
     this.props.inputElement.current.focus();
   }
 
